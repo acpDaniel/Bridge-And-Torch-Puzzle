@@ -5,11 +5,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from modelagem import Estado, funcao_sucessora
 
-
-# ===============================================================================================
-# Classe Base
-# ===============================================================================================
-
 SEED = 42
 
 class AlgoritmoBusca:
@@ -93,11 +88,6 @@ class AlgoritmoBusca:
         ax.set_title(f"{self.nome} — {'Grafo completo' if view=='global' else 'Caminho ótimo'}"
                      f"{' (expandidos destacados)' if expansions else ''}", fontsize=16)
 
-        
-# ===============================================================================================
-# BFS
-# ===============================================================================================
-
 class BFS(AlgoritmoBusca):
     def __init__(self, dados):
         super().__init__(dados, nome="BFS")
@@ -136,11 +126,6 @@ class BFS(AlgoritmoBusca):
         self.nos_expandidos = nos_expandidos
         self.visitados = visitados
         self.expandidos = expandidos
-
-
-# ===============================================================================================
-# DFS
-# ===============================================================================================
 
 class DFS(AlgoritmoBusca):
     def __init__(self, dados, limite=10_000):
@@ -182,11 +167,6 @@ class DFS(AlgoritmoBusca):
         self.nos_expandidos = nos_expandidos
         self.visitados = visitados
         self.expandidos = expandidos
-
-
-# ===============================================================================================
-# Custo Uniforme
-# ===============================================================================================
 
 class CustoUniforme(AlgoritmoBusca):
     def __init__(self, dados):
@@ -233,11 +213,6 @@ class CustoUniforme(AlgoritmoBusca):
         self.tempo_exec = fim - inicio
         self.nos_expandidos = nos_expandidos
         self.expandidos = expandidos
-
-
-# ===============================================================================================
-# A*
-# ===============================================================================================
 
 class AEstrela(AlgoritmoBusca):
     def __init__(self, dados, funcao_heuristica):

@@ -2,33 +2,20 @@ import matplotlib.pyplot as plt
 from matplotlib import colormaps
 
 def print_caminho(algoritmo):
-    """
-    Exibe o caminho e as métricas do algoritmo em formato legível.
-    """
-    print(f"\n{'='*80}")
-    print(f"🧩 {algoritmo.nome}")
-    print(f"{'='*80}")
-
     estado_atual = algoritmo.dados.estado_inicial
     print(f"0: Estado inicial: {estado_atual}")
 
     for i, passo in enumerate(algoritmo.caminho, start=1):
         direcao = "início" if passo.estado_destino.tocha_inicio else "final"
-        print(f"{i}: {passo.grupo_viajante} levam a tocha para o {direcao} (custo: {passo.custo})")
+        print(f"{i}: Passo: {passo.grupo_viajante} levam a tocha para o {direcao} (custo: {passo.custo})")
         estado_atual = passo.estado_destino
 
     print(f"Estado final: {estado_atual}")
-    print(f"\n📊 Custo total: {algoritmo.custo_total}")
-    print(f"⏱️ Tempo de execução: {algoritmo.tempo_exec:.6f}s")
-    print(f"🌐 Nós expandidos: {algoritmo.nos_expandidos}")
-    print(f"📍 Visitados: {len(algoritmo.visitados)}")
-    print(f"{'='*80}\n")
+    print(f"Custo total: {algoritmo.custo_total}, "
+          f"Tempo: {algoritmo.tempo_exec * 1000:.3f} ms, "
+          f"Nós expandidos: {algoritmo.nos_expandidos}")
 
 def plot_metricas(algoritmos, colormap='Set3'):
-    """
-    Plota métricas comparativas (custo, tempo e nós expandidos) entre algoritmos.
-    Mesma estrutura da função original, mas adaptada para receber objetos de algoritmo.
-    """
     nomes = [a.nome for a in algoritmos]
     custo_total = [a.custo_total for a in algoritmos]
     tempo = [a.tempo_exec * 1000 for a in algoritmos]  # → ms

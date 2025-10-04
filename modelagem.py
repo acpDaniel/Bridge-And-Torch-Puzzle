@@ -2,10 +2,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from itertools import combinations, chain
 
-# ===============================================================================================
-# Classe Estado
-# ===============================================================================================
-
 class Estado:
     def __init__(self, grupo_inicio: set, tocha_inicio: bool):
         self.grupo_inicio = grupo_inicio
@@ -25,14 +21,8 @@ class Estado:
     def __hash__(self):
         return hash((frozenset(self.grupo_inicio), self.tocha_inicio))
 
-
-# ===============================================================================================
-# Classe Grafo
-# ===============================================================================================
-
 class Grafo:
     def __init__(self):
-        # dicionário: {rótulo_estado: {vizinho: custo}}
         self.lista_adjacencia = {}
 
     def adicionar_estado(self, estado: Estado):
@@ -64,11 +54,6 @@ class Grafo:
                  transform=plt.gca().transAxes)
         plt.show(block=True)
 
-
-# ===============================================================================================
-# Classe Passo
-# ===============================================================================================
-
 class Passo:
     def __init__(self, estado_origem: Estado, estado_destino: Estado,
                  grupo_viajante: set, custo: int):
@@ -84,24 +69,16 @@ class Passo:
     def __repr__(self):
         return f"Passo({self.estado_origem} -> {self.estado_destino}, {self.grupo_viajante}, {self.custo})"
 
-
-# ===============================================================================================
-# Funções de geração de sucessores
-# ===============================================================================================
-
 def gerar_grupos_viajantes(grupo_pessoas: set):
     pessoas = sorted(grupo_pessoas)
     casos_pessoa_isolada = (frozenset(c) for c in combinations(pessoas, 1))
     casos_dupla = (frozenset(c) for c in combinations(pessoas, 2))
     return chain(casos_pessoa_isolada, casos_dupla)
 
-
 def funcao_sucessora(estado: Estado, tempos: dict[str, int], pessoas: set) -> list[Passo]:
-    """Gera todos os passos possíveis a partir de um estado dado os tempos e pessoas."""
     possiveis_passos = []
 
     if estado.tocha_inicio:
-        # Movimento: esquerda → direita
         for grupo_viajante in gerar_grupos_viajantes(estado.grupo_inicio):
             novo_grupo_inicio = estado.grupo_inicio - grupo_viajante
             estado_sucessor = Estado(grupo_inicio=novo_grupo_inicio, tocha_inicio=False)
@@ -110,7 +87,6 @@ def funcao_sucessora(estado: Estado, tempos: dict[str, int], pessoas: set) -> li
                 Passo(estado, estado_sucessor, grupo_viajante, custo)
             )
     else:
-        # Movimento: direita → esquerda
         grupo_fim = pessoas - estado.grupo_inicio
         for grupo_viajante in gerar_grupos_viajantes(grupo_fim):
             novo_grupo_inicio = estado.grupo_inicio | grupo_viajante
