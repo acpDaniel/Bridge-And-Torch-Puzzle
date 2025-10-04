@@ -83,17 +83,13 @@ def funcao_sucessora(estado: Estado, tempos: dict[str, int], pessoas: set) -> li
             novo_grupo_inicio = estado.grupo_inicio - grupo_viajante
             estado_sucessor = Estado(grupo_inicio=novo_grupo_inicio, tocha_inicio=False)
             custo = max(tempos[p] for p in grupo_viajante)
-            possiveis_passos.append(
-                Passo(estado, estado_sucessor, grupo_viajante, custo)
-            )
+            possiveis_passos.append(Passo(estado, estado_sucessor, grupo_viajante, custo))
     else:
         grupo_fim = pessoas - estado.grupo_inicio
         for grupo_viajante in gerar_grupos_viajantes(grupo_fim):
             novo_grupo_inicio = estado.grupo_inicio | grupo_viajante
             estado_sucessor = Estado(grupo_inicio=novo_grupo_inicio, tocha_inicio=True)
             custo = max(tempos[p] for p in grupo_viajante)
-            possiveis_passos.append(
-                Passo(estado, estado_sucessor, grupo_viajante, custo)
-            )
+            possiveis_passos.append(Passo(estado, estado_sucessor, grupo_viajante, custo))
 
     return possiveis_passos

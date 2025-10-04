@@ -107,7 +107,7 @@ class BFS(AlgoritmoBusca):
             nos_expandidos += 1
 
             for passo in funcao_sucessora(estado_atual, self.dados.tempos, self.dados.pessoas):
-                if passo.estado_destino.grupo_inicio == estado_objetivo.grupo_inicio:
+                if passo.estado_destino == estado_objetivo:
                     fim = time()
                     self.caminho = caminho + [passo]
                     self.custo_total = custo_atual + passo.custo
@@ -128,7 +128,7 @@ class BFS(AlgoritmoBusca):
         self.expandidos = expandidos
 
 class DFS(AlgoritmoBusca):
-    def __init__(self, dados, limite=10_000):
+    def __init__(self, dados, limite=10000):
         super().__init__(dados, nome="DFS")
         self.limite = limite
 
