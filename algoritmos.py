@@ -36,7 +36,7 @@ class AlgoritmoBusca:
                 G.add_edge(str(estado), str(passo.estado_destino), weight=passo.custo)
         return G
 
-    def plot(self, view="global", expansions=False, ax=None):
+    def plot(self, view="global", expansions=False, ax=None, font_size=8, node_size=800):
         if view not in ("global", "path"):
             raise ValueError("view deve ser 'global' ou 'path'.")
 
@@ -80,13 +80,13 @@ class AlgoritmoBusca:
 
         nx.draw_networkx_edges(G, pos, edge_color="lightgray", width=1, ax=ax)
         nx.draw_networkx_edges(G, pos, edgelist=caminho_edges, edge_color="red", width=2.5, ax=ax)
-        nx.draw(G, pos, node_color=cores, with_labels=True, node_size=800, font_size=8, ax=ax)
+        nx.draw(G, pos, node_color=cores, with_labels=True, node_size=node_size, font_size=font_size, ax=ax)
 
         edge_labels = nx.get_edge_attributes(G, 'weight')
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='black', ax=ax)
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=font_size, font_color='black', ax=ax)
 
         ax.set_title(f"{self.nome} — {'Grafo completo' if view=='global' else 'Caminho ótimo'}"
-                     f"{' (expandidos destacados)' if expansions else ''}", fontsize=16)
+                    f"{' (expandidos destacados)' if expansions else ''}", fontsize=16)
 
 class BFS(AlgoritmoBusca):
     def __init__(self, dados):
