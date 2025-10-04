@@ -85,9 +85,15 @@ class AlgoritmoBusca:
         nx.draw_networkx_edges(G, pos, edgelist=caminho_edges, edge_color="red", width=2.5, ax=ax)
         nx.draw(G, pos, node_color=cores, with_labels=True, node_size=800, font_size=8, ax=ax)
 
-        ax.set_title(f"{self.nome} — {'Grafo completo' if view=='global' else 'Caminho ótimo'}{' (expandidos destacados)' if expansions else ''}", fontsize=16)
+        # Adiciona pesos das arestas
+        edge_labels = nx.get_edge_attributes(G, 'weight')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels,
+                                     font_size=8, font_color='black', ax=ax)
 
-
+        ax.set_title(f"{self.nome} — {'Grafo completo' if view=='global' else 'Caminho ótimo'}"
+                     f"{' (expandidos destacados)' if expansions else ''}", fontsize=16)
+        
+        
 # ===============================================================================================
 # BFS
 # ===============================================================================================
