@@ -1,7 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-from itertools import combinations
-
+from itertools import combinations, chain
 
 # ===============================================================================================
 # Classe Estado
@@ -91,11 +90,10 @@ class Passo:
 # ===============================================================================================
 
 def gerar_grupos_viajantes(grupo_pessoas: set):
-    """Gera subconjuntos de 1 ou 2 pessoas para atravessar a ponte."""
-    for combination in combinations(grupo_pessoas, 1):
-        yield set(combination)
-    for combination in combinations(grupo_pessoas, 2):
-        yield set(combination)
+    pessoas = sorted(grupo_pessoas)
+    casos_pessoa_isolada = (frozenset(c) for c in combinations(pessoas, 1))
+    casos_dupla = (frozenset(c) for c in combinations(pessoas, 2))
+    return chain(casos_pessoa_isolada, casos_dupla)
 
 
 def funcao_sucessora(estado: Estado, tempos: dict[str, int], pessoas: set) -> list[Passo]:

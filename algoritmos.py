@@ -10,6 +10,8 @@ from modelagem import Estado, funcao_sucessora
 # Classe Base
 # ===============================================================================================
 
+SEED = 42
+
 class AlgoritmoBusca:
     def __init__(self, dados, nome="Algoritmo"):
         self.dados = dados
@@ -45,7 +47,7 @@ class AlgoritmoBusca:
 
         if view == "global":
             G = self._gerar_grafo_completo()
-            pos = nx.spring_layout(G, seed=42, k=1.2)
+            pos = nx.spring_layout(G, seed=SEED, k=1.2)
             self._global_pos = pos
         else:
             G = nx.DiGraph()
@@ -58,11 +60,11 @@ class AlgoritmoBusca:
                 pos = {n: self._global_pos.get(n, None) for n in G.nodes()}
                 faltantes = [n for n, p in pos.items() if p is None]
                 if faltantes:
-                    pos_local = nx.spring_layout(G.subgraph(faltantes), seed=42, k=1.2)
+                    pos_local = nx.spring_layout(G.subgraph(faltantes), seed=SEED, k=1.2)
                     for n in faltantes:
                         pos[n] = pos_local[n]
             else:
-                pos = nx.spring_layout(G, seed=42, k=1.2)
+                pos = nx.spring_layout(G, seed=SEED, k=1.2)
 
         if ax is None:
             _, ax = plt.subplots(figsize=(18, 12))
@@ -85,14 +87,12 @@ class AlgoritmoBusca:
         nx.draw_networkx_edges(G, pos, edgelist=caminho_edges, edge_color="red", width=2.5, ax=ax)
         nx.draw(G, pos, node_color=cores, with_labels=True, node_size=800, font_size=8, ax=ax)
 
-        # Adiciona pesos das arestas
         edge_labels = nx.get_edge_attributes(G, 'weight')
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels,
-                                     font_size=8, font_color='black', ax=ax)
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color='black', ax=ax)
 
         ax.set_title(f"{self.nome} — {'Grafo completo' if view=='global' else 'Caminho ótimo'}"
                      f"{' (expandidos destacados)' if expansions else ''}", fontsize=16)
-        
+
         
 # ===============================================================================================
 # BFS
