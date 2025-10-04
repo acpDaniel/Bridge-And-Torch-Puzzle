@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib import colormaps
 from modelagem import Estado, Grafo, funcao_sucessora
-
+import numpy as np  
 def print_caminho(caminho, estado_inicial, custo_total, tempo, nos_expandidos):
     estado_atual = estado_inicial
     print(f"{0}: Estado inicial: {estado_atual}")
@@ -28,9 +28,9 @@ def plot_metricas(resultados_algoritmos,colormap):
     axs[0].set_title("Custo Total")
     axs[0].set_xlabel("Custo")
 
-    axs[1].barh(algoritmos, tempo, color=bar_colors)
-    axs[1].set_title("Tempo (s)")
-    axs[1].set_xlabel("Segundos")
+    axs[1].barh(algoritmos, np.array(tempo)*1000, color=bar_colors)
+    axs[1].set_title("Tempo (ms)")
+    axs[1].set_xlabel("Milissegundos")
 
     axs[2].barh(algoritmos, nos_expandidos, color=bar_colors)
     axs[2].set_title("Nós Expandidos")
