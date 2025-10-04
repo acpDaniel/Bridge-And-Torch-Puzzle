@@ -64,12 +64,10 @@ def dfs(estado_inicial: Estado, estado_objetivo: Estado, limite=10_000):
 def custo_uniforme(estado_inicial: Estado, estado_objetivo: Estado):
     inicio = time()
     
-    visitados = set()
-    visitados.add(estado_inicial)
-    
+    # armazena o menor custo conhecido até cada estado
+    melhor_custo = {estado_inicial: 0}  
     heap = []
-    # contador para desempatar (evitando que a comparação vá para Estado, que não tem comparação, por não ter custo associado à um estado individual.)
-    contador = 0
+    contador = 0 
     heapq.heappush(heap, (0, contador, estado_inicial, []))
     
     nos_expandidos = 0
@@ -77,21 +75,26 @@ def custo_uniforme(estado_inicial: Estado, estado_objetivo: Estado):
     while heap:
         custo_atual, _, estado_atual, caminho = heapq.heappop(heap)
         nos_expandidos += 1
+
+        # ignora caminhos piores do que o melhor já conhecido
+        if custo_atual > melhor_custo.get(estado_atual, float('inf')):
+            continue
+
+        # se o estado atual é o objetivo, terminamos
+        if estado_atual == estado_objetivo:
+            fim = time()
+            return caminho, custo_atual, fim - inicio, nos_expandidos
         
+        # gera sucessores
         for passo in funcao_sucessora(estado_atual):
             estado_sucessor = passo.estado_destino
             novo_custo = custo_atual + passo.custo
-            
-            # se o sucessor é o estado final, terminamos
-            if estado_sucessor.grupo_inicio == estado_objetivo.grupo_inicio:
-                fim = time()
-                caminho_completo = caminho + [passo]
-                return caminho_completo, novo_custo, fim - inicio, nos_expandidos
-            
-            if estado_sucessor not in visitados:
-                visitados.add(estado_sucessor)
+
+            # só processa se encontrou um caminho mais barato
+            if novo_custo < melhor_custo.get(estado_sucessor, float('inf')):
+                melhor_custo[estado_sucessor] = novo_custo
                 novo_caminho = caminho + [passo]
-                contador += 1  # incrementa o contador para desempate
+                contador += 1
                 heapq.heappush(heap, (novo_custo, contador, estado_sucessor, novo_caminho))
     
     fim = time()
@@ -99,34 +102,38 @@ def custo_uniforme(estado_inicial: Estado, estado_objetivo: Estado):
 
 def a_estrela(estado_inicial: Estado, estado_objetivo: Estado, funcao_heuristica):
     inicio = time()
-    
-    visitados = set()
-    visitados.add(estado_inicial)
-    
+
+    # armazena o menor custo conhecido para cada estado
+    melhor_custo = {estado_inicial: 0} 
     heap = []
     contador = 0
     f0 = funcao_heuristica(estado_inicial)
     heapq.heappush(heap, (f0, contador, 0, estado_inicial, []))
     
     nos_expandidos = 0
-    
+
     while heap:
         f_atual, _, g_atual, estado_atual, caminho = heapq.heappop(heap)
         nos_expandidos += 1
-        
+
+        # Se chegamos ao estado objetivo, retornamos o resultado
+        if estado_atual == estado_objetivo:
+            fim = time()
+            return caminho, g_atual, fim - inicio, nos_expandidos
+
+        # Ignora caminhos piores que o melhor já conhecido
+        if g_atual > melhor_custo.get(estado_atual, float('inf')):
+            continue
+
+        # Gera sucessores
         for passo in funcao_sucessora(estado_atual):
             estado_sucessor = passo.estado_destino
             g_novo = g_atual + passo.custo
             f_novo = g_novo + funcao_heuristica(estado_sucessor)
-            
-            # se o sucessor é o estado final, terminamos
-            if estado_sucessor.grupo_inicio == estado_objetivo.grupo_inicio:
-                fim = time()
-                caminho_completo = caminho + [passo]
-                return caminho_completo, g_novo, fim - inicio, nos_expandidos
-            
-            if estado_sucessor not in visitados:
-                visitados.add(estado_sucessor)
+
+            # Se encontramos um caminho melhor para esse estado, atualiza
+            if g_novo < melhor_custo.get(estado_sucessor, float('inf')):
+                melhor_custo[estado_sucessor] = g_novo
                 novo_caminho = caminho + [passo]
                 contador += 1
                 heapq.heappush(heap, (f_novo, contador, g_novo, estado_sucessor, novo_caminho))
