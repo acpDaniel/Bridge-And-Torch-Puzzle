@@ -160,7 +160,8 @@ class DFS(AlgoritmoBusca):
                 return
 
             for passo in funcao_sucessora(estado_atual, self.dados.tempos, self.dados.pessoas):
-                pilha.append((passo.estado_destino, caminho + [passo], custo_atual + passo.custo))
+                if passo.estado_destino not in visitados:
+                    pilha.append((passo.estado_destino, caminho + [passo], custo_atual + passo.custo))
 
         fim = time()
         self.tempo_exec = fim - inicio
